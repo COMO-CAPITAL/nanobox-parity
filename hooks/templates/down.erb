@@ -1,0 +1,29 @@
+#!/bin/sh -e
+
+# redirect stderr to stdout
+exec 2>&1
+
+export PATH="/data/sbin:/data/bin:/opt/gonano/sbin:/opt/gonano/bin:/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+if [ ! -f /etc/service/<%= svc %>/supervise/pid ]; then
+  echo "service already stopped"
+  exit 0
+fi
+
+PID=$(cat /etc/service/<%= svc %>/supervise/pid)
+
+# clean exit
+sv hup <%= svc %>
+
+# wait for process exit
+for i in {1..<%= timeout %>}
+do
+  if [ -e /proc/$PID ]; then
+    sleep 1
+  else
+    exit 0
+  fi
+done
+
+# try to kill service by runit
+exit 1

@@ -1,0 +1,9 @@
+run.config:
+  engine: nodejs
+  engine.config:
+    runtime: nodejs-8.9.1
+
+data.parity:
+  image: comocapital/parity:0.0.0
+  config:
+    chain: kovan

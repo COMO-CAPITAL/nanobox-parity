@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+# make sure the env dir exists
+directory "/data/etc/env.d" do
+  recursive true
+end
+
+# and that it's owned by gonano
+execute "chown gonano /data/etc/env.d"
+
+(payload[:env] || {}).each do |key, value|
+  file "/data/etc/env.d/#{key}" do
+    content value
+    owner 'gonano'
+    group 'gonano'
+    mode 0444
+  end
+end
+
+if payload[:logvac_host]
+  # configure narc
+  template '/opt/gonano/etc/narc.conf' do
+    variables ({
+      uid: payload[:component][:uid],
+      logvac: payload[:logvac_host],
+      svc: "parity",
+    })
+  end
+
+  # ensure log files are created
+  ["/var/log/gonano/parity/current"].each do |log_file|
+    if not ::File.exists? "#{log_file}"
+      parent = File.expand_path("..", "#{log_file}")
+      
+      # create the parent directory
+      directory parent do
+        owner 'gonano'
+        group 'gonano'
+        recursive true
+      end
+      
+      # create the log_file
+      file "#{log_file}" do
+        owner 'gonano'
+        group 'gonano'
+        mode  0644
+      end
+    end
+  end
+
+  directory '/etc/service/narc'
+
+  file '/etc/service/narc/run' do
+    mode 0755
+    content <<-EOF
+  #!/bin/sh -e
+  export PATH="/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/gonano/sbin:/opt/gonano/bin"
+  exec /opt/gonano/bin/narcd /opt/gonano/etc/narc.conf
+    EOF
+  end
+end
+
+directory '/data/var/db/parity' do
+  recursive true
+end
+
+# chown data/var/db/parity for gonano
+execute 'chown /data/var/db/parity' do
+  command 'chown -R gonano:gonano /data/var/db/parity'
+end

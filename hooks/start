@@ -1,0 +1,83 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+converged_config = converge( Hooky::Parity::CONFIG_DEFAULTS, payload[:config] || {} )
+
+directory '/etc/service/parity/log' do
+  recursive true
+end
+
+template '/etc/service/parity/log/run' do
+  mode 0755
+  source 'log-run.erb'
+  variables ({ svc: "parity" })
+end
+
+parity_exec = "parity \
+--base-path /data/var/db/parity \
+--chain #{converged_config[:chain]} \
+--ui-interface 0.0.0.0 \
+--jsonrpc-hosts all \
+--jsonrpc-cors all \
+--jsonrpc-interface all \
+--ws-interface all \
+--ws-origins all \
+--rpcapi=#{converged_config[:rpcapi].join(",")}"
+
+template '/etc/service/parity/run' do
+  mode 0755
+  variables ({ exec: parity_exec })
+end
+
+service 'parity' do
+  action :start
+  init :runit
+end
+
+# Attach the IP if provided
+if payload[:ips]
+  # set up persistance
+  file "/etc/nanoinit.d/eth00" do
+    content <<-EOF
+#!/bin/bash
+case $1 in
+  start)
+    if [[ ! $(ifconfig) =~ eth0:0 ]]; then
+      ifconfig eth0:0 #{payload[:ips][:default]}
+      arping -A -c 10 -I eth0 #{payload[:ips][:default]}
+    fi
+    ;;
+  stop)
+    if [[ $(ifconfig) =~ eth0:0 ]]; then
+      ifconfig eth0:0 down
+    fi
+    ;;
+  *)
+    echo "$0 start|stop"
+    exit 1
+    ;;
+esac
+EOF
+    mode 0755
+  end
+
+  # bring up interface
+  execute "bring up vip" do
+    command <<-EOF
+      /etc/nanoinit.d/eth00 start
+    EOF
+  end
+end
+
+# create stop script
+template '/etc/service/parity/control/d' do
+  mode 0755
+  source 'down.erb'
+  variables ({ svc: "parity", timeout: 100 })
+end
