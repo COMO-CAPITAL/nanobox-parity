@@ -76,6 +76,10 @@ EOF
 end
 
 # create stop script
+directory '/etc/service/parity/control' do
+  recursive true
+end
+
 template '/etc/service/parity/control/d' do
   mode 0755
   source 'down.erb'
