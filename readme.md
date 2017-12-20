@@ -15,3 +15,10 @@ data.parity:
       - personal
       - web3
 ```
+
+## Test
+
+```sh
+docker build -t comocapital/parity:{VERSION} .
+test\run_all.sh $VERSION
+```
