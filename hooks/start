@@ -35,6 +35,7 @@ parity_exec = "parity \
 --ws-origins all \
 --rpcapi=#{converged_config[:rpcapi].join(",")} \
 --logging=#{converged_config[:logging]} \
+--pruning #{converged_config[:pruning]} \
 --no-color"
 
 template '/etc/service/parity/run' do

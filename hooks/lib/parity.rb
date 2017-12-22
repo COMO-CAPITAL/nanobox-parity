@@ -43,6 +43,12 @@ module Hooky
       'dark',
       'offline'
     ]
+    
+    PRUNING_MODES = [
+      'auto',
+      'archive',
+      'fast'
+    ]
 
     CONFIG_DEFAULTS = {
       # global settings
@@ -54,7 +60,8 @@ module Hooky
       chain:                            {type: :string, default: 'kovan', from: CHAIN_TYPES},
       rpcapi:                           {type: :array, of: :string, default: DEFAULT_JSONRPC_TYPES, from: JSONRPC_TYPES},
       logging:                          {type: :string, default: 'info'},
-      mode:                             {type: :string, default: 'last', from: OPERATING_MODES}
+      mode:                             {type: :string, default: 'last', from: OPERATING_MODES},
+      pruning:                          {type: :string, default: 'fast', from: PRUNING_MODES}
     }
 
   end

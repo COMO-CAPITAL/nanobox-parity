@@ -16,6 +16,7 @@ data.parity:
       - web3
     logging: info
     mode: last
+    pruning: fast
 ```
 
 ## Publish
