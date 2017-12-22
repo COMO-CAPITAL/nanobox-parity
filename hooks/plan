@@ -11,11 +11,13 @@ require 'json'
 plan = {
   redundant: false,
   horizontal: false,
+  users: [],
   ips: [:default],
   port: 30303,
   port_ui: 8180,
   port_rpc: 8545,
   port_ws: 8546,
+  behaviors: []
 }
 
 puts JSON.pretty_generate(plan)

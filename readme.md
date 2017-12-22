@@ -6,7 +6,7 @@
 
 ```yml
 data.parity:
-  image: comocapital/parity:0.0.0
+  image: comocapital/parity:0.0.1
   config:
     chain: kovan
     rpcapi:
@@ -14,11 +14,12 @@ data.parity:
       - net
       - personal
       - web3
+    logging: info
 ```
 
 ## Test
 
 ```sh
 docker build -t comocapital/parity:{VERSION} .
-test\run_all.sh $VERSION
+test/run_all.sh $VERSION
 ```

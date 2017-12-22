@@ -35,7 +35,7 @@ if payload[:logvac_host]
   end
 
   # ensure log files are created
-  ["/var/log/gonano/parity/current"].each do |log_file|
+  ["/var/log/gonano/parity/current", "/data/var/log/parity.log"].each do |log_file|
     if not ::File.exists? "#{log_file}"
       parent = File.expand_path("..", "#{log_file}")
       
@@ -57,21 +57,57 @@ if payload[:logvac_host]
 
   directory '/etc/service/narc'
 
-  file '/etc/service/narc/run' do
+  template '/etc/service/narc/run' do
     mode 0755
-    content <<-EOF
-  #!/bin/sh -e
-  export PATH="/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/gonano/sbin:/opt/gonano/bin"
-  exec /opt/gonano/bin/narcd /opt/gonano/etc/narc.conf
-    EOF
+    source 'run-root.erb'
+    variables ({ exec: "/opt/gonano/bin/narcd /opt/gonano/etc/narc.conf" })
   end
 end
 
+# Install extra packages
+
+# Add extra paths
+if payload[:extra_path_dirs] && payload[:extra_path_dirs].length > 0
+  directory "/data/etc/env.d" do
+    recursive true
+    owner 'gonano'
+    group 'gonano'
+  end
+
+  file "/data/etc/env.d/EXTRA_PATHS" do
+    content payload[:extra_path_dirs].join(":")
+    owner 'gonano'
+    group 'gonano'
+    mode 0444
+  end
+end
+
+if payload[:extra_packages]
+  execute "Install packages" do
+    command "/data/bin/pkgin -y in #{payload[:extra_packages].join(' ')}"
+    path "/data/sbin:/data/bin:/opt/gonano/sbin:/opt/gonano/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    user 'gonano'
+  end
+end
+
+if payload[:extra_steps]
+  payload[:extra_steps].each_with_index do |cmd, i|
+
+    execute "Extra Step: #{cmd}" do
+      command "bash -i -l -c \"#{escape cmd}\""
+      cwd "/data"
+      path "/data/sbin:/data/bin:/opt/gonano/sbin:/opt/gonano/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      user 'gonano'
+    end
+  end
+end
+
+# make sure the database dir exists
 directory '/data/var/db/parity' do
   recursive true
 end
 
-# chown data/var/db/parity for gonano
+# and that it's owned by gonano
 execute 'chown /data/var/db/parity' do
   command 'chown -R gonano:gonano /data/var/db/parity'
 end

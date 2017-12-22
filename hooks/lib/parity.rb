@@ -9,7 +9,8 @@ module Hooky
        
        # parity settings
        chain:                              {type: :string, default: 'kovan', from: ["olympic", "frontier", "homestead", "mainnet", "morden", "ropsten", "classic", "expanse", "testnet", "kovan", "dev"]},
-       rpcapi:                             {type: :array, of: :string, default: ["eth", "net", "personal", "web3"], from: ["all", "safe", "web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]}
+       rpcapi:                             {type: :array, of: :string, default: ["eth", "net", "personal", "web3"], from: ["all", "safe", "web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]},
+       logging:                            {type: :string, default: 'info'}
     }
 
   end

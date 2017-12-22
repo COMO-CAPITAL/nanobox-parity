@@ -4,6 +4,7 @@ run.config:
     runtime: nodejs-8.9.1
 
 data.parity:
-  image: comocapital/parity:0.0.0
+  image: comocapital/parity:0.0.1
   config:
     chain: kovan
+    logging: info
