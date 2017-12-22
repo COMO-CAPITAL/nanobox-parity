@@ -33,7 +33,6 @@ parity_exec = "parity \
 --ws-interface all \
 --ws-origins all \
 --rpcapi=#{converged_config[:rpcapi].join(",")} \
---log-file=/data/var/log/parity.log \
 --logging=#{converged_config[:logging]} \
 --no-color"
 
