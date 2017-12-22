@@ -6,7 +6,7 @@
 
 ```yml
 data.parity:
-  image: comocapital/parity:0.0.1
+  image: comocapital/parity:latest
   config:
     chain: kovan
     rpcapi:
@@ -15,6 +15,20 @@ data.parity:
       - personal
       - web3
     logging: info
+```
+
+## Publish
+
+Для публикации новой версии выполнить оба шага.
+
+* Опубликовать новую версию под своей версией
+```sh
+docker push comocapital/parity:$VERSION
+```
+
+* Опубликовать новую версию под версией `latest`
+```sh
+docker push comocapital/parity:latest
 ```
 
 ## Test
