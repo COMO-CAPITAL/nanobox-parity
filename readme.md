@@ -15,6 +15,7 @@ data.parity:
       - personal
       - web3
     logging: info
+    mode: last
 ```
 
 ## Publish

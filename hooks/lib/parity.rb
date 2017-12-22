@@ -35,6 +35,14 @@ module Hooky
       "personal",
       "web3"
     ]
+    
+    OPERATING_MODES = [
+      'last',
+      'active',
+      'passive',
+      'dark',
+      'offline'
+    ]
 
     CONFIG_DEFAULTS = {
       # global settings
@@ -46,6 +54,7 @@ module Hooky
       chain:                            {type: :string, default: 'kovan', from: CHAIN_TYPES},
       rpcapi:                           {type: :array, of: :string, default: DEFAULT_JSONRPC_TYPES, from: JSONRPC_TYPES},
       logging:                          {type: :string, default: 'info'},
+      mode:                             {type: :string, default: 'last', from: OPERATING_MODES}
     }
 
   end
