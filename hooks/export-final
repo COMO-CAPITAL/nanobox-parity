@@ -6,18 +6,7 @@ require 'bundler/setup'
 
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
-require 'json'
 
-plan = {
-  redundant: false,
-  horizontal: false,
-  users: [],
-  ips: [:default],
-  port: 30303,
-  port_ui: 8180,
-  port_rpc: 8545,
-  port_ws: 8546,
-  behaviors: [:migratable]
-}
-
-puts JSON.pretty_generate(plan)
+execute "send diff data to new member" do
+  command "rsync --delete -e 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -a /data/var/db/parity/. #{payload[:member][:local_ip]}:/data/var/db/parity/"
+end
