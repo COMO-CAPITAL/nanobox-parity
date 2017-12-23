@@ -24,6 +24,13 @@ RUN \
 
 USER root
 
+# Install binaries
+RUN rm -rf /opt/gonano/var/db/pkgin && \
+    /opt/gonano/bin/pkgin -y up && \
+    /opt/gonano/bin/pkgin -y in \
+      rsync && \
+    rm -rf /var/gonano/db/pkgin/cache
+
 RUN /opt/gonano/bin/gem install remote_syslog_logger && \
   mkdir -p /opt/nanobox/hooks && \
   mkdir -p /var/nanobox
@@ -34,7 +41,11 @@ RUN \
   chmod +x /opt/nanobox/hooks/start && \
   chmod +x /opt/nanobox/hooks/stop && \
   chmod +x /opt/nanobox/hooks/plan && \
-  chmod +x /opt/nanobox/hooks/configure
+  chmod +x /opt/nanobox/hooks/configure && \
+  chmod +x /opt/nanobox/hooks/export-final && \
+  chmod +x /opt/nanobox/hooks/export-live && \
+  chmod +x /opt/nanobox/hooks/import-clean && \
+  chmod +x /opt/nanobox/hooks/import-prep
 
 # Cleanup disk
 RUN rm -rf \
