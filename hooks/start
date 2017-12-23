@@ -38,6 +38,7 @@ parity_exec = "parity \
 --pruning #{converged_config[:pruning]} \
 --port #{converged_config[:port]} \
 --auto-update none \
+--no-ancient-blocks \
 --no-color"
 
 template '/etc/service/parity/run' do
