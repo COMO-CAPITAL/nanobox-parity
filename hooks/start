@@ -37,7 +37,6 @@ parity_exec = "parity \
 --logging=#{converged_config[:logging]} \
 --pruning #{converged_config[:pruning]} \
 --port #{converged_config[:port]} \
---no-ancient-blocks \
 --auto-update none \
 --no-color"
 
