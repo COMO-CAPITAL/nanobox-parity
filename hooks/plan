@@ -14,9 +14,6 @@ plan = {
   users: [],
   ips: [:default],
   port: 30303,
-  port_ui: 8180,
-  port_rpc: 8545,
-  port_ws: 8546,
   behaviors: [:migratable]
 }
 

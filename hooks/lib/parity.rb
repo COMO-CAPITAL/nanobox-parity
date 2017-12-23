@@ -61,7 +61,8 @@ module Hooky
       rpcapi:                           {type: :array, of: :string, default: DEFAULT_JSONRPC_TYPES, from: JSONRPC_TYPES},
       logging:                          {type: :string, default: 'info'},
       mode:                             {type: :string, default: 'last', from: OPERATING_MODES},
-      pruning:                          {type: :string, default: 'fast', from: PRUNING_MODES}
+      pruning:                          {type: :string, default: 'fast', from: PRUNING_MODES},
+      port:                             {type: :integer, default: 30303},
     }
 
   end

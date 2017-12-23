@@ -17,6 +17,7 @@ data.parity:
     logging: info
     mode: last
     pruning: fast
+    port: 30303
 ```
 
 ## Publish

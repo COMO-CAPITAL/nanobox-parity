@@ -36,6 +36,7 @@ parity_exec = "parity \
 --rpcapi=#{converged_config[:rpcapi].join(",")} \
 --logging=#{converged_config[:logging]} \
 --pruning #{converged_config[:pruning]} \
+--port #{converged_config[:port]} \
 --no-color"
 
 template '/etc/service/parity/run' do
@@ -49,17 +50,7 @@ service 'parity' do
 end
 
 ensure_socket 'parity' do
-  port '30303'
-  action :listening
-end
-
-ensure_socket 'parity' do
-  port '8545'
-  action :listening
-end
-
-ensure_socket 'parity' do
-  port '8180'
+  port converged_config[:port]
   action :listening
 end
 
