@@ -157,3 +157,33 @@ if payload[:platform] != 'local'
   end
 
 end
+
+# Set up cron
+if payload[:member][:uid] == 1 && ! payload[:cron_jobs].nil?
+  include Hookit::Helper::Cron
+  include Hookit::Helper::Shell
+
+  directory '/opt/nanobox/cron/'
+
+  payload[:cron_jobs].each_with_index do |job, id|
+    template "/opt/nanobox/cron/#{job[:id]}" do
+      owner 'gonano'
+      source 'cron.erb'
+      group 'gonano'
+      mode 0755
+      variables ({
+        component_uid: payload[:component][:uid],
+        member_uid: payload[:member][:uid],
+        logvac_host: payload[:logvac_host],
+        command: escape_shell_string(job[:command]),
+        cron_id: id + 1
+      })
+    end
+  end
+
+  template '/etc/crontab' do
+    mode 0644
+    variables ({ crons: payload[:cron_jobs] })
+  end
+
+end

@@ -42,3 +42,13 @@ directory '/etc/service/narc' do
   action :delete
   not_if { !Dir.exist?('/etc/service/narc') }
 end
+
+service 'cron' do
+  action :disable
+  not_if { !Dir.exist?('/etc/service/cron') }
+end
+
+directory '/etc/service/cron' do
+  action :delete
+  not_if { !Dir.exist?('/etc/service/cron') }
+end
