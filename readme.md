@@ -18,6 +18,7 @@ data.parity:
     mode: last
     pruning: fast
     port: 30303
+    basepath: /data/var/db/parity
 ```
 
 ## Publish

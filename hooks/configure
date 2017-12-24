@@ -7,6 +7,8 @@ require 'bundler/setup'
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
 
+converged_config = converge( Hooky::Parity::CONFIG_DEFAULTS, payload[:config] || {} )
+
 # make sure the env dir exists
 directory "/data/etc/env.d" do
   recursive true
@@ -103,13 +105,13 @@ if payload[:extra_steps]
 end
 
 # make sure the database dir exists
-directory '/data/var/db/parity' do
+directory converged_config[:basepath] do
   recursive true
 end
 
 # and that it's owned by gonano
-execute 'chown /data/var/db/parity' do
-  command 'chown -R gonano:gonano /data/var/db/parity'
+execute "chown #{converged_config[:basepath]}" do
+  command "chown -R gonano:gonano #{converged_config[:basepath]}"
 end
 
 if payload[:platform] != 'local'

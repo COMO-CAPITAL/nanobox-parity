@@ -25,7 +25,7 @@ end
 
 parity_exec = "parity \
 --mode #{converged_config[:mode]} \
---base-path /data/var/db/parity \
+--base-path #{converged_config[:basepath]} \
 --chain #{converged_config[:chain]} \
 --ui-interface 0.0.0.0 \
 --jsonrpc-hosts all \
