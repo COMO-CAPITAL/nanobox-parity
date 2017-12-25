@@ -6,17 +6,14 @@ require 'bundler/setup'
 
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
-require 'json'
 
-plan = {
-  redundant: false,
-  horizontal: false,
-  user: "gonano",
-  users: [{username: "gonano", meta: {}}],
-  ips: [:default],
-  port: 22,
-  mount_protocol: :nfs,
-  behaviors: [:mountable, :migratable]
-}
+service 'ssh' do
+  action :disable
+  init :runit
+  not_if { !Dir.exist?('/etc/service/ssh') }
+end
 
-puts JSON.pretty_generate(plan)
+directory '/etc/service/ssh' do
+  action :delete
+  not_if { !Dir.exist?('/etc/service/ssh') }
+end

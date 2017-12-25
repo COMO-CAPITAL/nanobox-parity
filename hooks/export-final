@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+include Hookit::Helper::NFS
+
+converged_config = converge( Hooky::Parity::CONFIG_DEFAULTS, payload[:config] || {} )
+
+basepath = "/data/var/db/unfs/#{clean_writables([converged_config[:basepath]])[0]}"
+
+execute "send diff data to new member" do
+command "rsync --delete --exclude=#{basepath}/chains -e 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -a #{basepath}/. #{payload[:member][:local_ip]}:#{basepath}/"
+end

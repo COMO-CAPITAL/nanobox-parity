@@ -51,6 +51,10 @@ RUN \
   chmod +x /opt/nanobox/hooks/start && \
   chmod +x /opt/nanobox/hooks/stop && \
   chmod +x /opt/nanobox/hooks/plan && \
+  chmod +x /opt/nanobox/hooks/import-clean && \
+  chmod +x /opt/nanobox/hooks/import-prep && \
+  chmod +x /opt/nanobox/hooks/export-live && \
+  chmod +x /opt/nanobox/hooks/export-final && \
   chmod +x /opt/nanobox/hooks/configure
 
 # Cleanup disk
