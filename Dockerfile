@@ -6,9 +6,9 @@ FROM nanobox/runit
 # Create directories
 RUN mkdir -p /var/log/gonano
 
-# Install arping
+# Install deps
 RUN apt-get update -qq && \
-    apt-get install -y iputils-arping cron && \
+    apt-get install -y iputils-arping cron rpcbind nfs-common && \
     apt-get clean all && \
     rm -rf /var/lib/apt/lists/*
 
@@ -22,6 +22,14 @@ RUN \
   chmod +x /data/bin/parity && \
   rm -rf /tmp/sum.txt
 
+# Install binaries
+RUN rm -rf /data/var/db/pkgin && \
+    /data/bin/pkgin -y up && \
+    /data/bin/pkgin -y in \
+        unfs3 \
+        flex && \
+    rm -rf /data/var/db/pkgin/cache
+
 USER root
 
 # Install binaries
@@ -34,6 +42,8 @@ RUN rm -rf /opt/gonano/var/db/pkgin && \
 RUN /opt/gonano/bin/gem install remote_syslog_logger && \
   mkdir -p /opt/nanobox/hooks && \
   mkdir -p /var/nanobox
+  
+RUN ln -s /data/var/db/unfs /app
 
 ADD hooks /opt/nanobox/hooks
 
@@ -41,11 +51,7 @@ RUN \
   chmod +x /opt/nanobox/hooks/start && \
   chmod +x /opt/nanobox/hooks/stop && \
   chmod +x /opt/nanobox/hooks/plan && \
-  chmod +x /opt/nanobox/hooks/configure && \
-  chmod +x /opt/nanobox/hooks/export-final && \
-  chmod +x /opt/nanobox/hooks/export-live && \
-  chmod +x /opt/nanobox/hooks/import-clean && \
-  chmod +x /opt/nanobox/hooks/import-prep
+  chmod +x /opt/nanobox/hooks/configure
 
 # Cleanup disk
 RUN rm -rf \

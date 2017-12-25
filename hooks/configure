@@ -104,14 +104,25 @@ if payload[:extra_steps]
   end
 end
 
-# make sure the database dir exists
-directory converged_config[:basepath] do
-  recursive true
+payload[:users].each do |user|
+  execute "echo \"#{user[:username]}:#{user[:password]}\" | chpasswd"
 end
 
-# and that it's owned by gonano
-execute "chown #{converged_config[:basepath]}" do
-  command "chown -R gonano:gonano #{converged_config[:basepath]}"
+# Create some ssh host keys
+execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_rsa_key -N '' -t rsa" do
+  not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_rsa_key' }
+end
+
+execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_dsa_key -N '' -t dsa" do
+  not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_dsa_key' }
+end
+
+execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa" do
+  not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_ecdsa_key' }
+end
+
+execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_ed25519_key -N '' -t ed25519" do
+  not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_ed25519_key' }
 end
 
 if payload[:platform] != 'local'
@@ -137,23 +148,6 @@ if payload[:platform] != 'local'
 
   file '/root/.ssh/authorized_keys' do
     content payload[:ssh][:admin_key][:public_key]
-  end
-
-  # Create some ssh host keys
-  execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_rsa_key -N '' -t rsa" do
-    not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_rsa_key' }
-  end
-
-  execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_dsa_key -N '' -t dsa" do
-    not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_dsa_key' }
-  end
-
-  execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa" do
-    not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_ecdsa_key' }
-  end
-
-  execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_ed25519_key -N '' -t ed25519" do
-    not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_ed25519_key' }
   end
 
 end
@@ -186,4 +180,21 @@ if payload[:member][:uid] == 1 && ! payload[:cron_jobs].nil?
     variables ({ crons: payload[:cron_jobs] })
   end
 
+end
+
+# Делаем совместимым с unfs.
+directory '/data/var/db/unfs' do
+  recursive true
+end
+
+# chown /data/var/db/unfs for gonano
+execute 'chown /data/var/db/unfs' do
+  command 'chown -R gonano:gonano /data/var/db/unfs'
+end
+
+file '/data/etc/exports' do
+  mode 0644
+  owner 'gonano'
+  group 'gonano'
+  content '/data/var/db/unfs 0.0.0.0/0(rw,no_root_squash,insecure)'
 end

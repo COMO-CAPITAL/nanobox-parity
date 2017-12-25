@@ -4,7 +4,21 @@ run.config:
     runtime: nodejs-8.9.1
 
 data.parity:
-  image: comocapital/parity:0.0.1
+  image: comocapital/parity:latest
   config:
     chain: kovan
     logging: info
+    mode: active
+    pruning: fast
+    basepath: parity/db
+    
+worker.sync:
+  start: sleep 365d
+  network_dirs:
+    data.parity:
+      - parity/db
+    data.storage:
+      - parity/backup
+
+data.storage:
+  image: nanobox/unfs:0.9

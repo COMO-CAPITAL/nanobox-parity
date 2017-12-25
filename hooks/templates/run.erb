@@ -17,4 +17,5 @@ if File.exist?('/data/etc/environment.d/nano-envs')
 end
 -%>
 
+sv start rpcbind || exit 1
 exec chpst -u gonano <%= exec %>
