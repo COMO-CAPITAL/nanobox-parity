@@ -23,8 +23,9 @@ if available_space < needed_space
   exit 1
 end
 
-basepath = "/data/var/db/unfs/#{clean_writables([converged_config[:basepath]])[0]}"
+basepath = clean_writables([converged_config[:basepath]])[0]
 
 execute "send bulk data to new member" do
-  command "tar -cf - --exclude='#{basepath}/chains' /data/var/db/unfs | ssh #{payload[:member][:local_ip]} tar -C / -xpf -"
+  command "tar -cf - --exclude='./#{basepath}/chains' -C /data/var/db/unfs . | ssh #{payload[:member][:local_ip]} tar -C / -xpf -"
+  cwd "/data/var/db/unfs"
 end
