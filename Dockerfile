@@ -63,6 +63,8 @@ RUN rm -rf \
       /tmp/* \
       /var/tmp/*
 
+EXPOSE 30303/tcp 30303/udp
+
 WORKDIR /data
 
 # Run runit automatically
