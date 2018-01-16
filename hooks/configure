@@ -198,3 +198,7 @@ file '/data/etc/exports' do
   group 'gonano'
   content '/data/var/db/unfs 0.0.0.0/0(rw,no_root_squash,insecure)'
 end
+
+execute 'sync time' do
+  command "ntpdate -s ntp.ubuntu.com"
+end
