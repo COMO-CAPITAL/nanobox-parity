@@ -127,7 +127,7 @@ parity_exec = "parity \
 --rpcapi=#{converged_config[:rpcapi].join(",")} \
 --logging=#{converged_config[:logging]} \
 --pruning #{converged_config[:pruning]} \
---port #{converged_config[:port]} \
+--port 30303 \
 --auto-update none \
 --no-ancient-blocks \
 --no-color"

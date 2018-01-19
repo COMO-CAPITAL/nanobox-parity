@@ -62,7 +62,6 @@ module Hooky
       logging:                          {type: :string, default: 'info'},
       mode:                             {type: :string, default: 'active', from: OPERATING_MODES},
       pruning:                          {type: :string, default: 'fast', from: PRUNING_MODES},
-      port:                             {type: :integer, default: 30303},
       basepath:                         {type: :string, default: 'parity'}
     }
 
