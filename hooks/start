@@ -118,7 +118,7 @@ parity_exec = "parity \
 --mode #{converged_config[:mode]} \
 --base-path #{basepath} \
 --chain #{converged_config[:chain]} \
---ui-interface 0.0.0.0 \
+--no-ui \
 --jsonrpc-hosts all \
 --jsonrpc-cors all \
 --jsonrpc-interface all \
