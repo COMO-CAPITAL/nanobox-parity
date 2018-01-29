@@ -8,7 +8,15 @@ RUN mkdir -p /var/log/gonano
 
 # Install deps
 RUN apt-get update -qq && \
-    apt-get install -y iputils-arping cron rpcbind nfs-common ntpdate && \
+    apt-get install -y \
+      iputils-arping \
+      cron \
+      rpcbind \
+      nfs-common \
+      ntpdate \
+      # for json_pp
+      perl \
+    && \
     apt-get clean all && \
     rm -rf /var/lib/apt/lists/*
 
