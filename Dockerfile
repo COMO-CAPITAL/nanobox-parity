@@ -63,6 +63,8 @@ RUN \
   chmod +x /opt/nanobox/hooks/import-prep && \
   chmod +x /opt/nanobox/hooks/export-live && \
   chmod +x /opt/nanobox/hooks/export-final && \
+  chmod +x /opt/nanobox/hooks/backup && \
+  chmod +x /opt/nanobox/hooks/restore && \
   chmod +x /opt/nanobox/hooks/configure
 
 # Cleanup disk

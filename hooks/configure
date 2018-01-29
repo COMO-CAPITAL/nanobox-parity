@@ -9,6 +9,23 @@ require 'hookit/setup'
 
 converged_config = converge( Hooky::Parity::CONFIG_DEFAULTS, payload[:config] || {} )
 
+# Делаем совместимым с unfs.
+directory '/data/var/db/unfs' do
+  recursive true
+end
+
+# chown /data/var/db/unfs for gonano
+execute 'chown /data/var/db/unfs' do
+  command 'chown -R gonano:gonano /data/var/db/unfs'
+end
+
+file '/data/etc/exports' do
+  mode 0644
+  owner 'gonano'
+  group 'gonano'
+  content '/data/var/db/unfs 0.0.0.0/0(rw,no_root_squash,insecure)'
+end
+
 # make sure the env dir exists
 directory "/data/etc/env.d" do
   recursive true
@@ -66,6 +83,10 @@ if payload[:logvac_host]
   end
 end
 
+payload[:users].each do |user|
+  execute "echo \"#{user[:username]}:#{user[:password]}\" | chpasswd"
+end
+
 # Install extra packages
 
 # Add extra paths
@@ -102,10 +123,6 @@ if payload[:extra_steps]
       user 'gonano'
     end
   end
-end
-
-payload[:users].each do |user|
-  execute "echo \"#{user[:username]}:#{user[:password]}\" | chpasswd"
 end
 
 # Create some ssh host keys
@@ -180,23 +197,6 @@ if payload[:member][:uid] == 1 && ! payload[:cron_jobs].nil?
     variables ({ crons: payload[:cron_jobs] })
   end
 
-end
-
-# Делаем совместимым с unfs.
-directory '/data/var/db/unfs' do
-  recursive true
-end
-
-# chown /data/var/db/unfs for gonano
-execute 'chown /data/var/db/unfs' do
-  command 'chown -R gonano:gonano /data/var/db/unfs'
-end
-
-file '/data/etc/exports' do
-  mode 0644
-  owner 'gonano'
-  group 'gonano'
-  content '/data/var/db/unfs 0.0.0.0/0(rw,no_root_squash,insecure)'
 end
 
 execute 'sync time' do

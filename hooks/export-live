@@ -26,6 +26,6 @@ end
 basepath = clean_writables([converged_config[:basepath]])[0]
 
 execute "send bulk data to new member" do
-  command "tar -cf - --exclude='./#{basepath}/chains' -C /data/var/db/unfs . | ssh #{payload[:member][:local_ip]} tar -C / -xpf -"
+  command "tar czf - --exclude='./#{basepath}/chains' -C /data/var/db/unfs . | ssh #{payload[:member][:local_ip]} tar xzf - -C /data/var/db/unfs/"
   cwd "/data/var/db/unfs"
 end

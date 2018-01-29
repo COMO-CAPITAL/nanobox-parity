@@ -16,7 +16,7 @@ plan = {
   ips: [:default],
   port: 22,
   mount_protocol: :nfs,
-  behaviors: [:mountable, :migratable]
+  behaviors: [:migratable, :backupable, :mountable]
 }
 
 puts JSON.pretty_generate(plan)

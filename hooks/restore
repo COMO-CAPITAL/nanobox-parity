@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+execute "retrieve data from backup container" do
+  command "ssh -o StrictHostKeyChecking=no #{payload[:warehouse][:host]} 'cat /data/var/db/unfs/#{payload[:warehouse][:backup_id]}.tgz' | tar -C /data/var/db/unfs/ -zxf -"
+end
