@@ -124,6 +124,7 @@ parity_exec = "parity \
 --jsonrpc-interface all \
 --ws-interface all \
 --ws-origins all \
+--ws-hosts all \
 --rpcapi=#{converged_config[:rpcapi].join(",")} \
 --logging=#{converged_config[:logging]} \
 --pruning #{converged_config[:pruning]} \
