@@ -131,7 +131,10 @@ parity_exec = "parity \
 --port 30303 \
 --auto-update none \
 --no-ancient-blocks \
---no-color"
+--no-color \
+--min-peers #{converged_config[:min_peers]} \
+--max-peers #{converged_config[:max_peers]} \
+--max-pending-peers #{converged_config[:max_pending_peers]}"
 
 template '/etc/service/parity/run' do
   mode 0755

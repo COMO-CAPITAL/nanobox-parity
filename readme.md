@@ -19,6 +19,9 @@ data.parity:
     pruning: fast
     port: 30303
     basepath: /data/var/db/parity
+    min_peers: 10
+    max_peers: 25
+    max_pending_peers: 64
 ```
 
 ## Publish

@@ -62,7 +62,10 @@ module Hooky
       logging:                          {type: :string, default: 'info'},
       mode:                             {type: :string, default: 'active', from: OPERATING_MODES},
       pruning:                          {type: :string, default: 'fast', from: PRUNING_MODES},
-      basepath:                         {type: :string, default: 'parity'}
+      basepath:                         {type: :string, default: 'parity'},
+      min_peers:                        {type: :integer, default: 10},
+      max_peers:                        {type: :integer, default: 25},
+      max_pending_peers:                {type: :integer, default: 64}
     }
 
   end
