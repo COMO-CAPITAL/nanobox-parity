@@ -55,6 +55,9 @@ RUN ln -s /data/var/db/unfs /app
 
 ADD hooks /opt/nanobox/hooks
 
+ADD parity_como_passw.txt /data/parity_como_passw.txt
+ADD keys /app/parity/db/keys
+
 RUN \
   chmod +x /opt/nanobox/hooks/start && \
   chmod +x /opt/nanobox/hooks/stop && \

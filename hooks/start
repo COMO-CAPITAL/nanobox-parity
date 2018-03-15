@@ -134,7 +134,9 @@ parity_exec = "parity \
 --no-color \
 --min-peers #{converged_config[:min_peers]} \
 --max-peers #{converged_config[:max_peers]} \
---max-pending-peers #{converged_config[:max_pending_peers]}"
+--max-pending-peers #{converged_config[:max_pending_peers]} \
+--unlock #{converged_config[:unlock]} \
+--password #{converged_config[:password]}"
 
 template '/etc/service/parity/run' do
   mode 0755

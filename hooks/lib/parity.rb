@@ -63,6 +63,8 @@ module Hooky
       mode:                             {type: :string, default: 'active', from: OPERATING_MODES},
       pruning:                          {type: :string, default: 'fast', from: PRUNING_MODES},
       basepath:                         {type: :string, default: 'parity'},
+      unlock:                           {type: :string, default: '0xc511e644c1006ec55c92777e8ff04e011f452842'},
+      password:                         {type: :string, default: '/data/parity_como_passw.txt'},
       min_peers:                        {type: :integer, default: 10},
       max_peers:                        {type: :integer, default: 25},
       max_pending_peers:                {type: :integer, default: 64}
