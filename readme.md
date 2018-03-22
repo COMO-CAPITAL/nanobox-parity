@@ -1,6 +1,6 @@
 # nanobox-parity
 
-Компонент parity в виде data сервиса nanobox.
+Nanobox data service Parity component.
 
 ## Usage
 
@@ -26,12 +26,12 @@ data.parity:
 
 ## Publish
 
-* Собрать 
+* Build 
 ```
 docker build -t  comocapital/parity:latest .
 ```
 
-* Опубликовать новую версию под версией `latest`
+*  Publish the new version under the latest version `latest`
 ```sh
 docker push comocapital/parity:latest
 ```
@@ -47,19 +47,19 @@ test/run_all.sh $VERSION
 
 #### Unable to make a connection to the Parity Secure API
 
-Необходимо сгенерировать свой authcode для бравзера.
+You need to generate your own auth code for the browser.
 
-* Подключаемся к контейнеру парити
+* Connection to the parity container
 
 ```sh
 nanobox console data.parity
 ```
 
-* Запускаем signer с путём до parity db
+*  launch signer with path to parity db
 
 ```sh
 /data/bin/parity signer new-token --base-path /app/parity/db --chain kovan
 # /app это ссылка до /data/var/db/unfs
 ```
 
-Программа выдаст код, а также он сохранится в файле `/app/parity/db/signer/authcodes`. Вставить код в предлагаемое поле ввода.
+The app will output the code and it will be saved to file `/app/parity/db/signer/authcodes`. Put the code into the offered input field.
