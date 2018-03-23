@@ -24,8 +24,8 @@ USER gonano
 
 # Install binaries
 RUN \
-  echo "1ca8eedcd60cc2539a5d61182cba09b9  -" > /tmp/sum.txt && \
-  curl -fLs https://parity-downloads-mirror.parity.io/v1.8.11/x86_64-unknown-linux-gnu/parity | \
+  echo "4f4deb408df4e9203d957b36443ab524  -" > /tmp/sum.txt && \
+  curl -fLs https://parity-downloads-mirror.parity.io/v1.9.5/x86_64-unknown-linux-gnu/parity | \
     tee /data/bin/parity | md5sum --strict -c /tmp/sum.txt && \
   chmod +x /data/bin/parity && \
   rm -rf /tmp/sum.txt
