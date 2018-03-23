@@ -1,12 +1,12 @@
 # nanobox-parity
 
-Nanobox data service Parity component.
+Nanobox data service [Parity](https://github.com/paritytech/parity) component with [UNFS](https://docs.nanobox.io/app-config/network-storage/) (User-Space Network File System).
 
 ## Usage
 
 ```yml
 data.parity:
-  image: comocapital/parity:latest
+  image: comocapital/nanobox-parity:latest
   config:
     chain: kovan
     rpcapi:
@@ -18,48 +18,59 @@ data.parity:
     mode: last
     pruning: fast
     port: 30303
-    basepath: /data/var/db/parity
+    basepath: parity/db
     min_peers: 10
     max_peers: 25
     max_pending_peers: 64
+
+web.backend:
+  network_dirs:
+    data.parity:
+      - parity/db
 ```
 
-## Publish
+## UI
 
-* Build 
-```
-docker build -t  comocapital/parity:latest .
-```
-
-*  Publish the new version under the latest version `latest`
-```sh
-docker push comocapital/parity:latest
-```
-
-## Test
+* To connect to UI, start two terminals and typo:
 
 ```sh
-docker build -t comocapital/parity:{VERSION} .
-test/run_all.sh $VERSION
+# typo in first terminal
+nanobox tunnel data.parity -p 8546:8546
+
+# typo in second one
+nanobox tunnel data.parity -p 8180:8180
 ```
 
-## Ошибки
+* Open the browser and typo `localhost:8180`.
+
+Also, you can use this rule for Makefile:
+
+```sh
+# Required GNU Parallel
+# Install: sudo apt install parallel
+parity:
+	@(echo nanobox tunnel data.parity -p 8546:8546; \
+	echo nanobox tunnel data.parity -p 8180:8180) | parallel
+```
+
+## Errors
 
 #### Unable to make a connection to the Parity Secure API
 
 You need to generate your own auth code for the browser.
 
-* Connection to the parity container
+* Connect to the parity container:
 
 ```sh
 nanobox console data.parity
 ```
 
-*  launch signer with path to parity db
+* Launch signer with a path to the parity db:
 
 ```sh
-/data/bin/parity signer new-token --base-path /app/parity/db --chain kovan
-# /app это ссылка до /data/var/db/unfs
+# replace basepath with your actual basepath described in boxfile.yml
+/data/bin/parity signer new-token --base-path /app/${basepath} --chain kovan
+# `/app` is a symbolic link to `/data/var/db/unfs`
 ```
 
-The app will output the code and it will be saved to file `/app/parity/db/signer/authcodes`. Put the code into the offered input field.
+The app will output the code and it will be saved to the file `/app/${basepath}/signer/authcodes`. Put the code into the offered input field.
